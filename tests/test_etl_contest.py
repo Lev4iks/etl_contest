@@ -1,4 +1,6 @@
 import pymysql
+
+from etl.temp_file import data_transfer
 from .helpers import ping_container
 
 
@@ -8,7 +10,6 @@ def test_container_is_alive(mysql_source_image):
 
 def test_containers_assets_is_ready(mysql_source_image,
                                     mysql_destination_image):
-
     src_conn = pymysql.connect(**mysql_source_image,
                                cursorclass=pymysql.cursors.DictCursor)
 
@@ -53,4 +54,11 @@ def test_data_transfer(mysql_source_image,
 
     #   put your code for testing here!
 
-    pass
+    src_db = pymysql.connect(**mysql_source_image,
+                             cursorclass=pymysql.cursors.DictCursor)
+
+    dst_db = pymysql.connect(**mysql_destination_image,
+                             cursorclass=pymysql.cursors.DictCursor)
+
+    # data_transfer(src_db, dst_db)
+    # assert get_ids_from_db(src_db) == get_ids_from_db(dst_db)
