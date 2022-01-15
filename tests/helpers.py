@@ -20,7 +20,6 @@ def get_unused_port():
 
 
 def ping_container(mysql_credentials, container_id=None):
-
     timeout = 0.001
 
     for i in range(100):
@@ -61,3 +60,27 @@ def load_struct_to_destination_db(mysql_credentials):
     with conn:
         with conn.cursor() as c:
             c.execute(destination_ddl_transactions)
+
+
+def get_ids_from_source_db(image):
+    db = pymysql.connect(**image)
+    with db:
+        with db.cursor() as c:
+            c.execute("""SELECT id from transactions ORDER BY dt ASC""")
+            ids = [ID[0] for ID in c.fetchall()]
+
+            print("SOURCE DB IDS")
+            print(*ids)
+            return ids
+
+
+def get_ids_from_destination_db(image):
+    db = pymysql.connect(**image)
+    with db:
+        with db.cursor() as c:
+            c.execute("""SELECT id from transactions_denormalized ORDER BY dt ASC""")
+            ids = [ID[0] for ID in c.fetchall()]
+
+            print("DESTINATION DB IDS")
+            print(*ids)
+            return ids
