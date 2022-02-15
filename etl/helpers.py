@@ -9,7 +9,7 @@ def get_data_from_source_db(src_db: connect, last_download_date):
     with src_db:
         with src_db.cursor() as c:
             if not last_download_date:
-                c.execute("""SELECT dt FROM transactions ORDER BY dt ASC""")
+                c.execute("""SELECT dt FROM transactions ORDER BY dt ASC LIMIT 1""")
                 last_download_date = c.fetchone()
             else:
                 last_download_date["dt"] += datetime.timedelta(hours=1)
@@ -30,7 +30,7 @@ def get_last_download_date(dst_db: connect):
 
     with dst_db:
         with dst_db.cursor() as c:
-            c.execute("""SELECT dt FROM transactions_denormalized ORDER BY dt DESC""")
+            c.execute("""SELECT dt FROM transactions_denormalized ORDER BY dt DESC LIMIT 1""")
             date = c.fetchone()
     return date  # noqa
 
